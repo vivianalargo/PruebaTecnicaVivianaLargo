@@ -1,0 +1,582 @@
+﻿
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+        crossorigin="anonymous"></script>
+
+<script src="simple.money.format.js"></script>
+
+
+<style>
+    .table {
+        border: 1px solid black;
+        width: 100%;
+        border-collapse: collapse;
+    }
+</style>
+
+<form>
+
+    <h1 class="display-4">Bienvenido</h1>
+    <p id="parrafoPrincipal">Señor usuario: recuerde que si es su primer ingreso al sistema y corresponde a un comercio su usuario y contraseña son iguales a su código. En caso de ser pagador corresponde a su identificación </p>
+    <div class="col-12">
+        <div class="form-inline">
+            <div class="col-4">
+                <label>Usuario</label>
+            </div>
+            <div class="col-8">
+                <input id="inpUsuario" type="text" placeholder="usuario">
+            </div>
+        </div>
+        <div class="form-inline">
+            <div class="col-4">
+                <label>Contraseña</label>
+            </div>
+            <div class="col-8">
+                <input id="inpContrasenia" type="text" placeholder="contraseña">
+            </div>
+        </div><br><br>
+
+        <div class="form-inline">
+            <div class="col-1">
+                <button type="button" id="btnIngresar" class=" btn btn-success pull-left">Ingresar</button>
+            </div>
+            <div class="col-11">
+                <button type="button" id="btnGuardar" class=" btn btn-success" disabled="">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+<div>
+    <br />
+    <br />
+    <button type="button" id="btnRealizarPago" class=" btn btn-success" hidden data-toggle="modal" data-target="#formularioPago">Realizar Pago</button>
+    <div>
+        <p type="text" id="totalTransacciones" hidden> </p>
+        <button type="button" id="btnVerBuscarPago" class=" btn btn-success" hidden>Buscar Pago</button>
+        <button type="button" id="btnRecargarTransacciones" class=" btn btn-success" hidden>Recargar Transacciones</button>
+        <button type="button" id="btnModificarPago" class=" btn btn-success" hidden>Modificar Pago</button>
+
+    </div>
+
+    <br />
+    <br />
+    <p id='output'>
+
+    </p>
+    <br />
+    <br />
+</div>
+
+
+<div class="modal fade" id="formularioPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Realizar Pago</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 form-inline">
+                    <div class="col-4">
+                        <label>Código</label>
+                    </div>
+                    <div class="col-8">
+                        <input class="form-control" id="inpCodigo" type="number" placeholder="Código" />
+                    </div>
+                </div>
+                <div class="col-12 form-inline">
+                    <div class="col-4">
+                        <label>Concepto</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="inpConcepto" class="form-control" type="text" placeholder="concepto" />
+                    </div>
+                </div>
+                <div class="col-12 form-inline">
+                    <div class="col-4">
+                        <label>Monto</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="inpMonto" class="form-control" type="number" placeholder="monto" />
+                    </div>
+                </div>
+                <div class="col-12 form-inline">
+                    <div class="col-4">
+                        <label>Medio Pago</label>
+                    </div>
+                    <div class="col-8">
+                        <select id="ddlMedioPago" class="form-control">
+                            <option value="32"> Tarjeta de Crédito </option>
+                            <option value="29"> PSE </option>
+                            <option value="41"> Gana </option>
+                            <option value="42"> Caja </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 form-inline">
+                    <div class="col-4">
+                        <label>Comercio</label>
+                    </div>
+                    <div class="col-8">
+                        <select id="ddlComercios" class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 form-inline" hidden>
+                    <div class="col-4">
+                        <label>Estado</label>
+                    </div>
+                    <div class="col-8">
+                        <select id="ddlEstado" class="form-control">
+                            <option value="1"> Aprobada </option>
+                            <option value="1000"> Rechazada </option>
+                            <option value="999"> Pendiente </option>
+                            <option value="1001"> RechazadaSR </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="btnGuardarPago" class="btn btn-primary">Pagar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="formularioBuscarPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Buscar Pago</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 form-inline">
+                    <div class="col-4">
+                        <label>Fecha</label>
+                    </div>
+                    <div class="col-8">
+                        <input class="form-control" id="buscarFechaTransaccion" type="date" />
+                    </div>
+                </div>
+                <div class="col-12 form-inline">
+                    <div class="col-4">
+                        <label>Código</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="buscarCodTransaccion" class="form-control" type="text" />
+                    </div>
+                </div>
+                <div class="col-12 form-inline">
+                    <div class="col-4">
+                        <label>Pagador</label>
+                    </div>
+                    <div class="col-8">
+                        <select id="buscarDdlPagadores" class="form-control">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="btnBuscarPago" class="btn btn-primary">Buscar</button>
+                @*<button type="button" id="btnVerBuscarPago1" class=" btn btn-success">Buscar Pago</button>*@
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert" hidden id="advertencia">
+    <p id="mensaje"></p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="alert alert-success alert-dismissible fade show" role="alert" hidden id="exito">
+    <p id="mensaje"></p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert" hidden id="error">
+    <p id="mensaje"></p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<script>
+
+    var TipoUsuario
+    {
+        pagador = 1,
+            comercio = 2
+    }
+
+    var idUsuario;
+    var idTipoPerfil;
+
+    $(document).ready(function () {
+
+        $('.alert').on('closed.bs.alert', function () {
+            $('.alert').prop('hidden', true);
+        })
+
+        cargarComercios();
+
+        $("#btnVerBuscarPago").click(function () {
+            $("#formularioBuscarPago").modal({ backdrop: "static" });
+            cargarPagadores();
+        });
+
+        //Ingresar y Validar Usuario
+        $('#btnIngresar').click(function (e) {
+
+            var infoUsuario = new Object();
+
+            infoUsuario.Id = 0;
+            infoUsuario.TipoPerfil = 0;
+            infoUsuario.usuario = $('#inpUsuario').val();
+            infoUsuario.contrasenia = $('#inpContrasenia').val();
+
+
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "Usuarios/validarUsuario",
+                data: infoUsuario,
+
+                success: (data) => {
+
+                    idUsuario = data.results.idUsuario;
+                    idTipoPerfil = data.results.idTipoPerfil
+
+                    $('#inpUsuario').val('');
+                    $('#inpContrasenia').val('');
+
+                    if (idUsuario != -1 && data.results.usuario == data.results.contrasenia) {
+                        //alert('Por favor asigne un nuevo usuario y contraseña para el ingreso al sistema');
+                        $('#advertencia').prop('hidden', false);
+                        $('#advertencia > p').text('Por favor asigne un nuevo usuario y contraseña para el ingreso al sistema');
+                        $('.alert').alert();
+
+                        $('#btnGuardar').prop('disabled', false);
+
+                    }
+                    else if (idUsuario != -1 && data.results.usuario != data.results.contrasenia) {
+
+                        cargarFunciones()
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText)
+                    //alert("Error al acceder al sistema");
+                    $('#error').prop('hidden', false);
+                    $('#error > p').text('Error validando el usuario');
+                    $('.alert').alert();
+                }
+            });
+        });
+
+        //Guardar Usuario
+        $('#btnGuardar').click(function (e) {
+            if (
+                ($('#inpUsuario').val() != '' && $('#inpContrasenia').val() != '') &&
+                ($('#inpUsuario').val() != $('#inpContrasenia').val())
+            ) {
+
+                var infoUsuario = new Object();
+
+                debugger;
+
+                infoUsuario.Id = idUsuario;
+                infoUsuario.TipoPerfil = idTipoPerfil;
+                infoUsuario.usuario = $('#inpUsuario').val();
+                infoUsuario.contrasenia = $('#inpContrasenia').val();
+
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: "Usuarios/GuardarUsuario",
+                    data: infoUsuario,
+
+                    success: (data) => {
+
+                        //alert("Se guarda la información con éxito. Ingrese de nuevo al sistema con los nuevos datos");
+                        $('#inpUsuario').val('');
+                        $('#inpContrasenia').val('');
+
+                        $('#exito').prop('hidden', false);
+                        $('#exito > p').text('Se guarda la información con éxito. Ingrese de nuevo al sistema con los nuevos datos');
+                        $('.alert').alert();
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText)
+                        //alert("Error al acceder al sistema");
+
+                        $('#error').prop('hidden', false);
+                        $('#error > p').text('Error guardando la información');
+                        $('.alert').alert();
+                    }
+                });
+            }
+            else {
+                $('#advertencia').prop('hidden', false);
+                $('#advertencia > p').text('Los no pueden estar vacio ni el usuario puede ser igual a la contraseña');
+                $('.alert').alert();
+            }
+        });
+
+        //Buscar Pago
+        $('#btnBuscarPago').click(function (e) {
+
+            var infoCriterioBusqueda = new Object();
+
+            infoCriterioBusqueda.comercio = idTipoPerfil;
+            infoCriterioBusqueda.fecha = $('#buscarFechaTransaccion').val();
+            infoCriterioBusqueda.codigoTransaccion = $('#buscarCodTransaccion').val();
+            infoCriterioBusqueda.pagador = $('#buscarDdlPagadores').val();
+
+
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "Transacciones/BuscarTransaccion",
+                data: infoCriterioBusqueda,
+
+                success: (data) => {
+
+                    $('#formularioBuscarPago').modal('hide');
+
+                    if (data.resultado.length > 0) {
+                        //Mostrar el div de alterar transacción                      
+                        debugger;
+                        output = document.getElementById('output')
+                        output.innerHTML = json2Table(data.resultado)
+
+
+                    }
+                    else {
+                        output.innerHTML = "La búsqueda no arroja resultados";
+                    }
+                },
+                error: function (xhr, status, error) {
+                    //console.log(xhr.responseText)
+                    //alert("Error mostrando la transacción");
+
+                    $('#error').prop('hidden', false);
+                    $('#error > p').text('Error mostrando la transacción');
+                    $('.alert').alert();
+                }
+            });
+        });
+
+        //Guardar Pago
+        $('#btnGuardarPago').click(function (e) {
+
+            var infoTransaccion = new Object();
+
+            infoTransaccion.concepto = $('#inpConcepto').val();
+            infoTransaccion.codigo = $('#inpCodigo').val();
+            infoTransaccion.fecha = '01/01/2020';
+            infoTransaccion.monto = $('#inpMonto').val();
+            infoTransaccion.medioPago = $('#ddlMedioPago').val();
+            infoTransaccion.Comercio = $('#ddlComercios').val();
+            infoTransaccion.idUSuario = idUsuario;
+
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "Transacciones/GuardarTransaccion",
+                data: infoTransaccion,
+
+                success: (data) => {
+
+                    ///alert("Se guarda la información con éxito.");
+
+                    $('#exito').prop('hidden', false);
+                    $('#exito > p').text('Se guarda la información con éxito.');
+                    $('.alert').alert();
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText)
+
+                    //alert("Error realizando el pago : " + xhr.responseText);
+
+                    $('#error').prop('hidden', false);
+                    $('#error > p').text('Error realizando el pago, verifoque los datos. No se puede insertar una código de transacción duplicado');
+                    $('.alert').alert();
+                }
+            });
+
+        });
+
+
+        //Recargar Transacciones
+        $('#btnRecargarTransacciones').click(function (e) {
+            cargarFunciones();
+        });
+    });
+
+    //Autor: Noah Stoeckel 3 de marzo de 2020
+    //Referencia: https://dev.to/boxofcereal/how-to-generate-a-table-from-json-data-with-es6-methods-2eel
+    function json2Table(json) {
+
+        let seleccione = `<th>seleccione</th>`;
+
+        let cols = Object.keys(json[0]);
+
+
+        //Map over columns, make headers,join into string
+        let headerRow = cols
+            .map(col => `<th>${col}</th>`)
+            .join("");
+
+ 
+        let campochbox = `<tr><input type="checkbox"/></tr>`;
+
+        //map over array of json objs, for each row(obj) map over column values,
+        //and return a td with the value of that object for its column
+        //take that array of tds and join them
+        //then return a row of the tds
+        //finally join all the rows together
+        let rows = json
+            .map(row => {
+                let tds = cols.map(col => `<td>${row[col]}</td>`).join("");
+                return `<tr>${tds}</tr>`;
+            })
+            .join("");
+
+        //build the table
+        const table = `
+    <table class='table'>
+        <thead>
+            <tr>${headerRow}</tr>
+        <thead>
+        <tbody>
+            ${rows}
+        <tbody>
+    <table>`;
+
+        return table;
+    }
+
+
+    function cargarFunciones() {
+
+        var infoUsuario = new Object();
+        let total = 0;
+
+        infoUsuario.Id = idUsuario;
+        infoUsuario.TipoPerfil = idTipoPerfil;
+        infoUsuario.usuario = '';
+        infoUsuario.contrasenia = '';
+
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/Transacciones/CargarTransacciones",
+            data: infoUsuario,
+            success: (data) => {
+                if (data.resultado != undefined) {
+                    output = document.getElementById('output')
+                    output.innerHTML = json2Table(data.resultado)
+
+                    if (idTipoPerfil == 2) {
+                        $("#totalTransacciones").prop('hidden', false);
+                        $("#btnVerBuscarPago").prop('hidden', false);
+                        $("#btnRecargarTransacciones").prop('hidden', false);
+                        //$("#btnModificarPago").prop('hidden', false);
+
+                        $("#btnRealizarPago").prop('hidden', true);
+
+                        let valor = 0;
+
+                        $.each(data.resultado, function (key, value) {
+
+                            valor = valor + value.monto;
+
+                        })
+
+                        $("#totalTransacciones").text("Costo de las transacciones recibidas $ : " + valor);
+                        //$("#btnRecargarTransacciones").prop('hidden', false);
+                    }
+                    else {
+                        $("#btnRealizarPago").prop('hidden', false);
+
+                        $("#totalTransacciones").prop('hidden', true);
+                        $("#btnVerBuscarPago").prop('hidden', true);
+                        $("#btnRecargarTransacciones").prop('hidden', true);
+                    }
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText)
+                alert("Error al acceder al sistema");
+            }
+        });
+    }
+
+    function cargarComercios() {
+        $.ajax({
+            type: "GET",
+            //enctype: 'multipart/form-data',
+            url: "/Comercios/Get",
+
+            success: (data) => {
+                if (data.resultado != undefined) {
+
+                    $.each(data.resultado, (key, value) => {
+                        var option = new Option(value.codigo, value.id)
+                        $('#ddlComercios').append(option)
+                    })
+
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText)
+                alert("Error al acceder al sistema");
+            }
+        });
+    }
+
+    function cargarPagadores() {
+        $.ajax({
+            type: "GET",
+            url: "/Pagadores/Get",
+
+            success: (data) => {
+                if (data.resultado != undefined) {
+                    $("#buscarDdlPagadores").append('<option value=-1> -- Seleccione -- </option>');
+                    $.each(data.resultado, (key, value) => {
+                        var option = new Option(value.codigo, value.id)
+                        $('#buscarDdlPagadores').append(option)
+                    })
+
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText)
+                alert("Error al acceder al sistema");
+            }
+        });
+    }
+</script>
